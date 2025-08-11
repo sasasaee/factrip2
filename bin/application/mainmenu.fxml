@@ -4,21 +4,22 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" spacing="20" style="-fx-background-color: F1E7E7; -fx-border-color: #000000;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" spacing="20" style="-fx-background-color: F1E7E7; -fx-border-color: #000000;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.MainMenuController">
    <children>
-      <Button contentDisplay="CENTER" mnemonicParsing="false" style="-fx-background-color: #748DAE; -fx-border-color: #000000;" text="Explore Fun Facts" textFill="WHITE">
+      <Button fx:id="exploreFactsBtn" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleExploreFacts" style="-fx-background-color: #748DAE; -fx-border-color: #000000;" text="Explore Fun Facts" textFill="WHITE">
          <font>
             <Font name="Century Gothic" size="20.0" />
          </font></Button>
-      <Button mnemonicParsing="false" prefHeight="38.0" prefWidth="196.0" style="-fx-background-color: #748DAE; -fx-border-color: #000000;" text="Plan A Trip" textFill="WHITE">
+      <Button fx:id="planTripBtn" mnemonicParsing="false" onAction="#handlePlanTrip" prefHeight="38.0" prefWidth="196.0" style="-fx-background-color: #748DAE; -fx-border-color: #000000;" text="Plan A Trip" textFill="WHITE">
          <font>
             <Font name="Century Gothic" size="20.0" />
          </font>
       </Button>
-      <Button mnemonicParsing="false" prefHeight="38.0" prefWidth="196.0" style="-fx-background-color: #748DAE; -fx-border-color: #000000;" text="Memory Entry" textFill="WHITE">
+      <Button fx:id="memoryEntryBtn" mnemonicParsing="false" onAction="#handleMemoryEntry" prefHeight="38.0" prefWidth="196.0" style="-fx-background-color: #748DAE; -fx-border-color: #000000;" text="Memory Entry" textFill="WHITE">
          <font>
             <Font name="Century Gothic" size="20.0" />
          </font>
       </Button>
    </children>
 </VBox>
+
