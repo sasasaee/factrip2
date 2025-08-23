@@ -31,7 +31,15 @@ public class MainMenuController {
 
     @FXML
     void handleMemoryEntry(ActionEvent event) {
-        // TODO: Implement when your memory entry feature is ready
-        System.out.println("Memory Entry clicked");
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/application/memoryMain.fxml"));
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Memory Entry");
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
+
 }
