@@ -9,7 +9,7 @@
 <?import javafx.scene.paint.Stop?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" prefHeight="600.0" prefWidth="800.0" spacing="30" style="-fx-background-color: FFEAEA;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.Homecontroller">
+<VBox alignment="CENTER" prefHeight="793.0" prefWidth="1147.0" spacing="30" style="-fx-background-color: FFEAEA;" xmlns="http://javafx.com/javafx/21.0.7" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.Homecontroller">
 
     <!-- Correct padding specified with Insets element -->
     <padding>

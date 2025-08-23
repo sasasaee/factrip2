@@ -4,9 +4,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" spacing="20" style="-fx-background-color: F1E7E7; -fx-border-color: #000000;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox alignment="CENTER" fx:controller="application.MainMenuController" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="793.0" prefWidth="1147.0" spacing="20" style="-fx-background-color: F1E7E7; -fx-border-color: #000000;" xmlns="http://javafx.com/javafx/21.0.7" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Button contentDisplay="CENTER" mnemonicParsing="false" style="-fx-background-color: #748DAE; -fx-border-color: #000000;" text="Explore Fun Facts" textFill="WHITE">
+      <Button contentDisplay="CENTER" mnemonicParsing="false" style="-fx-background-color: #748DAE; -fx-border-color: #000000;" text="Explore Fun Facts" onAction="#handleExploreFacts" textFill="WHITE">
          <font>
             <Font name="Century Gothic" size="20.0" />
          </font></Button>
