@@ -23,6 +23,7 @@ public class Main extends Application {
             
             primaryStage.setTitle("Factrip - Plan explore and preserve");
             primaryStage.setScene(scene);
+            primaryStage.setMaximized(true);
             primaryStage.show();
 		} catch(Exception e) {
 			e.printStackTrace();

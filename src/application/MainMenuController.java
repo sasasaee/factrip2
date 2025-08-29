@@ -9,19 +9,26 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class MainMenuController {
+	public void switchScene(Stage stage, String fxmlPath, String title) {
+	    try {
+	        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+	        Parent root = loader.load();
+	        Scene scene = new Scene(root);
+	        stage.setScene(scene);
+	        stage.setTitle(title);
+	        stage.setMaximized(true); // maximize after setting scene
+	        stage.show();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	}
 
-    @FXML
-    void handleExploreFacts(ActionEvent event) {
-        try {
-            Parent root = FXMLLoader.load(getClass().getResource("/application/ExploreFacts.fxml"));
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.setTitle("Explore Fun Facts");
-            stage.show();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+	@FXML
+	void handleExploreFacts(ActionEvent event) {
+	    Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+	    switchScene(stage, "/application/ExploreFacts.fxml", "Explore Fun Facts");
+	}
+
 
     @FXML
     void handlePlanTrip(ActionEvent event) {
@@ -31,15 +38,8 @@ public class MainMenuController {
 
     @FXML
     void handleMemoryEntry(ActionEvent event) {
-        try {
-            Parent root = FXMLLoader.load(getClass().getResource("/application/memoryMain.fxml"));
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.setTitle("Memory Entry");
-            stage.show();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        switchScene(stage, "/application/memoryMain.fxml", "Memory Entry");
     }
 
 }
