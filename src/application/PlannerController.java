@@ -26,6 +26,7 @@ import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class PlannerController implements Initializable {
     
@@ -155,23 +156,33 @@ public class PlannerController implements Initializable {
     @FXML
     void saveEvent() {
         if (validateEventForm()) {
-            TripEvent event = new TripEvent();
-            event.setId(isEditingEvent && selectedEvent != null ? selectedEvent.getId() : UUID.randomUUID().toString());
-            event.setName(eventNameField.getText().trim());
-            event.setDate(eventDatePicker.getValue());
-            event.setTime(parseTime(eventTimeField.getText().trim()));
-            event.setLocation(eventLocationField.getText().trim());
-            event.setDescription(eventDescriptionArea.getText().trim());
+            TripEvent newOrUpdatedEvent = new TripEvent();
+            newOrUpdatedEvent.setName(eventNameField.getText().trim());
+            newOrUpdatedEvent.setDate(eventDatePicker.getValue());
+            newOrUpdatedEvent.setTime(parseTime(eventTimeField.getText().trim()));
+            newOrUpdatedEvent.setLocation(eventLocationField.getText().trim());
+            newOrUpdatedEvent.setDescription(eventDescriptionArea.getText().trim());
             
             if (isEditingEvent && selectedEvent != null) {
-                // Update existing event
-                int index = events.indexOf(selectedEvent);
-                if (index >= 0) {
-                    events.set(index, event);
+                // Update existing event by finding it by ID and replacing its content
+                newOrUpdatedEvent.setId(selectedEvent.getId()); // Keep the original ID
+                int index = -1;
+                for (int i = 0; i < events.size(); i++) {
+                    if (events.get(i).getId().equals(selectedEvent.getId())) {
+                        index = i;
+                        break;
+                    }
+                }
+                if (index != -1) {
+                    events.set(index, newOrUpdatedEvent);
+                } else {
+                    // Fallback: if original not found, add as new (shouldn't happen if logic is correct)
+                    events.add(newOrUpdatedEvent);
                 }
             } else {
                 // Add new event
-                events.add(event);
+                newOrUpdatedEvent.setId(UUID.randomUUID().toString());
+                events.add(newOrUpdatedEvent);
             }
             
             saveEventsToFile();
@@ -459,7 +470,7 @@ public class PlannerController implements Initializable {
         return events.stream()
                     .filter(event -> event.getDate().equals(date))
                     .sorted(Comparator.comparing(e -> e.getTime() != null ? e.getTime() : LocalTime.MIN))
-                    .collect(ArrayList::new, (list, item) -> list.add(item), (list1, list2) -> list1.addAll(list2));
+                    .collect(Collectors.toList());
     }
     
     private void selectEventFromList(String eventString) {
@@ -472,7 +483,7 @@ public class PlannerController implements Initializable {
                 selectedEvent = event;
                 populateEventForm(event);
                 eventFormPanel.setVisible(true);
-                isEditingEvent = false;
+                isEditingEvent = true; // Set to true when selecting an existing event
                 editEventBtn.setVisible(true);
                 deleteEventBtn.setVisible(true);
                 saveEventBtn.setText("Update Event");
