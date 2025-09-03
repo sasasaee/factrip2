@@ -1,10 +1,13 @@
 module factrip2 {
     requires javafx.controls;
     requires javafx.fxml;
-	requires javafx.graphics;
 	requires java.desktop;
-
+    requires javafx.graphics;
+    requires javafx.web;
+    requires transitive java.sql;
+	requires javafx.base;
+    
     opens application to javafx.fxml;
-
     exports application;
 }
+

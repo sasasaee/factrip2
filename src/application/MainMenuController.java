@@ -7,6 +7,8 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.scene.control.Button;
+
 
 public class MainMenuController {
 	public void switchScene(Stage stage, String fxmlPath, String title) {
@@ -36,10 +38,22 @@ public class MainMenuController {
         switchScene(stage, "/application/planner.fxml", "Factrip - Trip Planner");
     }
 
+    @FXML private Button memoEntry;
+
     @FXML
-    void handleMemoryEntry(ActionEvent event) {
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        switchScene(stage, "/application/memoryMain.fxml", "Memory Entry");
+    private void handleMemoryEntry(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("memoryMain.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setTitle("Memory Entry");
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
+
 
 }
