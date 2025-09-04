@@ -1,5 +1,7 @@
 package application;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -18,16 +20,24 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.io.*;
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import javafx.application.Platform;
+import javafx.scene.control.Alert;
+import javafx.util.Duration;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 
 public class PlannerController implements Initializable {
     
@@ -41,7 +51,8 @@ public class PlannerController implements Initializable {
     @FXML private TextField eventNameField, eventTimeField, eventLocationField;
     @FXML private DatePicker eventDatePicker;
     @FXML private TextArea eventDescriptionArea;
-    @FXML private ComboBox<String> eventCategoryComboBox; // New ComboBox for category
+    @FXML private ComboBox<String> eventCategoryComboBox;
+    @FXML private ComboBox<String> reminderComboBox; // New ComboBox for reminder
     @FXML private Button saveEventBtn, editEventBtn, deleteEventBtn, cancelEventBtn;
     
     // Calendar state
@@ -62,19 +73,33 @@ public class PlannerController implements Initializable {
     // Predefined categories and their colors
     private final Map<String, String> CATEGORY_COLORS = new HashMap<>();
 
+    // Reminder options
+    private final Map<String, Integer> REMINDER_OPTIONS = new LinkedHashMap<>();
+
     public PlannerController() {
         CATEGORY_COLORS.put("Travel", "#4CAF50"); // Green
         CATEGORY_COLORS.put("Meeting", "#2196F3"); // Blue
         CATEGORY_COLORS.put("Personal", "#FFC107"); // Amber
         CATEGORY_COLORS.put("Work", "#F44336"); // Red
         CATEGORY_COLORS.put("Other", "#9E9E9E"); // Grey
+
+        REMINDER_OPTIONS.put("No Reminder", 0);
+        REMINDER_OPTIONS.put("5 minutes before", 5);
+        REMINDER_OPTIONS.put("15 minutes before", 15);
+        REMINDER_OPTIONS.put("30 minutes before", 30);
+        REMINDER_OPTIONS.put("1 hour before", 60);
+        REMINDER_OPTIONS.put("1 day before", 1440);
     }
     
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // Initialize category ComboBox
         eventCategoryComboBox.setItems(FXCollections.observableArrayList(CATEGORY_COLORS.keySet()));
-        eventCategoryComboBox.getSelectionModel().selectFirst(); // Select first category by default
+        eventCategoryComboBox.getSelectionModel().selectFirst();
+
+        // Initialize reminder ComboBox
+        reminderComboBox.setItems(FXCollections.observableArrayList(REMINDER_OPTIONS.keySet()));
+        reminderComboBox.getSelectionModel().selectFirst();
 
         // Load events from text file
         loadEventsFromFile();
@@ -89,6 +114,9 @@ public class PlannerController implements Initializable {
                 selectEventFromList(newVal);
             }
         });
+
+        // Start reminder checker
+        startReminderChecker();
     }
     
     // View switching methods
@@ -168,7 +196,8 @@ public class PlannerController implements Initializable {
         editEventBtn.setVisible(false);
         deleteEventBtn.setVisible(false);
         saveEventBtn.setText("Add Event");
-        eventCategoryComboBox.getSelectionModel().selectFirst(); // Reset category selection
+        eventCategoryComboBox.getSelectionModel().selectFirst();
+        reminderComboBox.getSelectionModel().selectFirst(); // Reset reminder selection
     }
     
     @FXML
@@ -180,11 +209,11 @@ public class PlannerController implements Initializable {
             newOrUpdatedEvent.setTime(parseTime(eventTimeField.getText().trim()));
             newOrUpdatedEvent.setLocation(eventLocationField.getText().trim());
             newOrUpdatedEvent.setDescription(eventDescriptionArea.getText().trim());
-            newOrUpdatedEvent.setCategory(eventCategoryComboBox.getValue()); // Save selected category
+            newOrUpdatedEvent.setCategory(eventCategoryComboBox.getValue());
+            newOrUpdatedEvent.setReminderOffsetMinutes(REMINDER_OPTIONS.get(reminderComboBox.getValue())); // Save reminder offset
             
             if (isEditingEvent && selectedEvent != null) {
-                // Update existing event by finding it by ID and replacing its content
-                newOrUpdatedEvent.setId(selectedEvent.getId()); // Keep the original ID
+                newOrUpdatedEvent.setId(selectedEvent.getId());
                 int index = -1;
                 for (int i = 0; i < events.size(); i++) {
                     if (events.get(i).getId().equals(selectedEvent.getId())) {
@@ -195,11 +224,9 @@ public class PlannerController implements Initializable {
                 if (index != -1) {
                     events.set(index, newOrUpdatedEvent);
                 } else {
-                    // Fallback: if original not found, add as new (shouldn't happen if logic is correct)
                     events.add(newOrUpdatedEvent);
                 }
             } else {
-                // Add new event
                 newOrUpdatedEvent.setId(UUID.randomUUID().toString());
                 events.add(newOrUpdatedEvent);
             }
@@ -389,7 +416,7 @@ public class PlannerController implements Initializable {
         List<TripEvent> dayEvents = getEventsForDate(date);
         for (TripEvent event : dayEvents) {
             Label eventLabel = new Label(event.getName());
-            eventLabel.setFont(Font.font("Century Gothic", 8));
+            eventLabel.setFont(Font.font("Century Gothic", 18));
             
             // Apply color based on category
             String categoryColor = CATEGORY_COLORS.getOrDefault(event.getCategory(), "#4CAF50"); // Default to green
@@ -455,7 +482,7 @@ public class PlannerController implements Initializable {
         for (TripEvent event : relevantEvents) {
             String eventString = event.getDate().format(DateTimeFormatter.ofPattern("MMM d")) + 
                                (event.getTime() != null ? " " + event.getTime().format(DateTimeFormatter.ofPattern("HH:mm")) : "") + 
-                               " - " + event.getName() + " [" + event.getCategory() + "]"; // Include category in list view
+                               " - " + event.getName() + " [" + event.getCategory() + "]";
             eventListView.getItems().add(eventString);
         }
     }
@@ -521,7 +548,15 @@ public class PlannerController implements Initializable {
         eventTimeField.setText(event.getTime() != null ? event.getTime().format(DateTimeFormatter.ofPattern("HH:mm")) : "");
         eventLocationField.setText(event.getLocation());
         eventDescriptionArea.setText(event.getDescription());
-        eventCategoryComboBox.setValue(event.getCategory()); // Set category in ComboBox
+        eventCategoryComboBox.setValue(event.getCategory());
+        
+        // Set reminder ComboBox value
+        String reminderKey = REMINDER_OPTIONS.entrySet().stream()
+                                .filter(entry -> entry.getValue().equals(event.getReminderOffsetMinutes()))
+                                .map(Map.Entry::getKey)
+                                .findFirst()
+                                .orElse("No Reminder");
+        reminderComboBox.setValue(reminderKey);
     }
     
     private void clearEventForm() {
@@ -530,7 +565,8 @@ public class PlannerController implements Initializable {
         eventTimeField.clear();
         eventLocationField.clear();
         eventDescriptionArea.clear();
-        eventCategoryComboBox.getSelectionModel().selectFirst(); // Reset category selection
+        eventCategoryComboBox.getSelectionModel().selectFirst();
+        reminderComboBox.getSelectionModel().selectFirst(); // Reset reminder selection
     }
     
     private boolean validateEventForm() {
@@ -587,7 +623,6 @@ public class PlannerController implements Initializable {
                 }
             }
         } catch (FileNotFoundException e) {
-            // File doesn't exist yet, that's okay
             System.out.println("Events file not found, starting with empty list.");
         } catch (Exception e) {
             System.err.println("Error loading events from file: " + e.getMessage());
@@ -606,21 +641,22 @@ public class PlannerController implements Initializable {
         }
     }
     
-    // Simple string format: ID|Name|Date|Time|Location|Description|Category
+    // Simple string format: ID|Name|Date|Time|Location|Description|Category|ReminderOffsetMinutes
     private String eventToString(TripEvent event) {
-        return event.getId() + "|" + 
-               event.getName() + "|" + 
-               event.getDate().toString() + "|" + 
-               (event.getTime() != null ? event.getTime().toString() : "") + "|" + 
-               (event.getLocation() != null ? event.getLocation() : "") + "|" + 
-               (event.getDescription() != null ? event.getDescription() : "") + "|" + 
-               (event.getCategory() != null ? event.getCategory() : "Other"); // Default to "Other"
+        return event.getId() + "|" +
+               event.getName() + "|" +
+               event.getDate().toString() + "|" +
+               (event.getTime() != null ? event.getTime().toString() : "") + "|" +
+               (event.getLocation() != null ? event.getLocation() : "") + "|" +
+               (event.getDescription() != null ? event.getDescription() : "") + "|" +
+               (event.getCategory() != null ? event.getCategory() : "Other") + "|" +
+               event.getReminderOffsetMinutes();
     }
     
     private TripEvent parseEventFromString(String line) {
         try {
-            String[] parts = line.split("\\|", -1); // -1 to keep empty strings
-            if (parts.length >= 7) { // Now expecting 7 parts for category
+            String[] parts = line.split("\\|", -1);
+            if (parts.length >= 8) { // Now expecting 8 parts for reminderOffsetMinutes
                 TripEvent event = new TripEvent();
                 event.setId(parts[0]);
                 event.setName(parts[1]);
@@ -628,9 +664,21 @@ public class PlannerController implements Initializable {
                 event.setTime(parts[3].isEmpty() ? null : LocalTime.parse(parts[3]));
                 event.setLocation(parts[4].isEmpty() ? null : parts[4]);
                 event.setDescription(parts[5].isEmpty() ? null : parts[5]);
-                event.setCategory(parts[6].isEmpty() ? "Other" : parts[6]); // Default to "Other"
+                event.setCategory(parts[6].isEmpty() ? "Other" : parts[6]);
+                event.setReminderOffsetMinutes(Integer.parseInt(parts[7]));
                 return event;
-            } else if (parts.length == 6) { // Handle old format for backward compatibility
+            } else if (parts.length == 7) { // Handle old format for category
+                TripEvent event = new TripEvent();
+                event.setId(parts[0]);
+                event.setName(parts[1]);
+                event.setDate(LocalDate.parse(parts[2]));
+                event.setTime(parts[3].isEmpty() ? null : LocalTime.parse(parts[3]));
+                event.setLocation(parts[4].isEmpty() ? null : parts[4]);
+                event.setDescription(parts[5].isEmpty() ? null : parts[5]);
+                event.setCategory(parts[6].isEmpty() ? "Other" : parts[6]);
+                event.setReminderOffsetMinutes(0); // Default to no reminder
+                return event;
+            } else if (parts.length == 6) { // Handle even older format without category
                 TripEvent event = new TripEvent();
                 event.setId(parts[0]);
                 event.setName(parts[1]);
@@ -639,6 +687,7 @@ public class PlannerController implements Initializable {
                 event.setLocation(parts[4].isEmpty() ? null : parts[4]);
                 event.setDescription(parts[5].isEmpty() ? null : parts[5]);
                 event.setCategory("Other"); // Assign default category for old events
+                event.setReminderOffsetMinutes(0); // Default to no reminder
                 return event;
             }
         } catch (Exception e) {
@@ -646,4 +695,49 @@ public class PlannerController implements Initializable {
         }
         return null;
     }
+
+    // Reminder Logic
+ // ------------------ Reminder Logic ------------------
+    
+
+    private Timeline reminderTimeline;
+    private Set<String> notifiedEvents = new HashSet<>(); // Prevent duplicate notifications
+
+    private void startReminderChecker() {
+        if (reminderTimeline != null) {
+            reminderTimeline.stop();
+        }
+        // Check every 10 seconds
+        reminderTimeline = new Timeline(new KeyFrame(Duration.seconds(10), event -> checkReminders()));
+        reminderTimeline.setCycleCount(Timeline.INDEFINITE);
+        reminderTimeline.play();
+    }
+
+    private void checkReminders() {
+        LocalDateTime now = LocalDateTime.now();
+
+        for (TripEvent event : events) {
+            if (event.getTime() == null || event.getReminderOffsetMinutes() <= 0) continue;
+
+            LocalDateTime eventDateTime = LocalDateTime.of(event.getDate(), event.getTime());
+            LocalDateTime reminderTime = eventDateTime.minusMinutes(event.getReminderOffsetMinutes());
+
+            // Check if reminder is due and not yet notified
+            if (!notifiedEvents.contains(event.getId()) && !now.isBefore(reminderTime) && now.isBefore(eventDateTime)) {
+                notifiedEvents.add(event.getId()); // Mark as notified
+
+                // Use Platform.runLater to ensure thread safety
+                Platform.runLater(() -> {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Upcoming Event Reminder!");
+                    alert.setHeaderText(event.getName());
+                    String timeString = event.getTime().format(DateTimeFormatter.ofPattern("HH:mm"));
+                    String location = event.getLocation() != null ? event.getLocation() : "No location";
+                    alert.setContentText("Time: " + timeString + "\nLocation: " + location);
+                    alert.show();
+                });
+            }
+        }
+    }
+
 }
