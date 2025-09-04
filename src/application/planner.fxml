@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="700.0" prefWidth="1000.0" style="-fx-background-color: #F1E7E7;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.PlannerController">
+<BorderPane style="-fx-background-color: #F1E7E7;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.PlannerController">
    <top>
       <VBox alignment="CENTER" spacing="10" style="-fx-background-color: #748DAE; -fx-padding: 15;">
          <children>

@@ -82,7 +82,7 @@ public class TripEvent {
                 ", time=" + time +
                 ", location=\'" + location + '\'' +
                 ", description=\'" + description + '\'' +
-                '}'';
+                '}';
     }
     
     @Override

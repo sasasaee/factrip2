@@ -13,10 +13,17 @@ public class MainMenuController {
 	    try {
 	        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
 	        Parent root = loader.load();
-	        Scene scene = new Scene(root);
+	        
+	        // Ensure the stage is maximized before setting the new scene
+	        stage.setMaximized(true);
+	        
+	        // Get current maximized dimensions from the stage AFTER maximizing
+	        double width = stage.getWidth();
+	        double height = stage.getHeight();
+	        
+	        Scene scene = new Scene(root, width, height);
 	        stage.setScene(scene);
 	        stage.setTitle(title);
-	        stage.setMaximized(true); // maximize after setting scene
 	        stage.show();
 	    } catch (Exception e) {
 	        e.printStackTrace();
@@ -29,10 +36,9 @@ public class MainMenuController {
 	    switchScene(stage, "/application/ExploreFacts.fxml", "Explore Fun Facts");
 	}
 
-
     @FXML
     void handlePlanTrip(ActionEvent event) {
-    	Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         switchScene(stage, "/application/planner.fxml", "Factrip - Trip Planner");
     }
 
