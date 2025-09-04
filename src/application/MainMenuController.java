@@ -44,8 +44,13 @@ public class MainMenuController {
 
     @FXML
     void handlePlanTrip(ActionEvent event) {
-        // TODO: Implement when your trip planning feature is ready
-        System.out.println("Plan Trip clicked");
+    	Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        switchScene(stage, "/application/planner.fxml", "Factrip - Trip Planner");
+    }
+    @FXML
+    void handleMemoryEntry(ActionEvent event) {
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        switchScene(stage, "/application/memoryMain.fxml", "Memory Entry");
     }
 
 }
