@@ -136,6 +136,12 @@
                      </font>
                   </Label>
                   <TextArea fx:id="eventDescriptionArea" prefRowCount="3" style="-fx-border-color: #748DAE;" />
+                  <Label text="Category:" textFill="#547792">
+                     <font>
+                        <Font name="Century Gothic" size="12.0" />
+                     </font>
+                  </Label>
+                  <ComboBox fx:id="eventCategoryComboBox" prefWidth="270.0" promptText="Select Category" style="-fx-border-color: #748DAE;" />
                   <HBox spacing="10">
                      <children>
                         <Button fx:id="saveEventBtn" mnemonicParsing="false" onAction="#saveEvent" style="-fx-background-color: #4CAF50; -fx-text-fill: white;" text="Save">

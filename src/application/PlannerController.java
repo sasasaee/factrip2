@@ -1,5 +1,6 @@
 package application;
 
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -40,6 +41,7 @@ public class PlannerController implements Initializable {
     @FXML private TextField eventNameField, eventTimeField, eventLocationField;
     @FXML private DatePicker eventDatePicker;
     @FXML private TextArea eventDescriptionArea;
+    @FXML private ComboBox<String> eventCategoryComboBox; // New ComboBox for category
     @FXML private Button saveEventBtn, editEventBtn, deleteEventBtn, cancelEventBtn;
     
     // Calendar state
@@ -56,9 +58,24 @@ public class PlannerController implements Initializable {
     
     // Simple text file for data persistence
     private static final String EVENTS_FILE = "trip_events.txt";
+
+    // Predefined categories and their colors
+    private final Map<String, String> CATEGORY_COLORS = new HashMap<>();
+
+    public PlannerController() {
+        CATEGORY_COLORS.put("Travel", "#4CAF50"); // Green
+        CATEGORY_COLORS.put("Meeting", "#2196F3"); // Blue
+        CATEGORY_COLORS.put("Personal", "#FFC107"); // Amber
+        CATEGORY_COLORS.put("Work", "#F44336"); // Red
+        CATEGORY_COLORS.put("Other", "#9E9E9E"); // Grey
+    }
     
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        // Initialize category ComboBox
+        eventCategoryComboBox.setItems(FXCollections.observableArrayList(CATEGORY_COLORS.keySet()));
+        eventCategoryComboBox.getSelectionModel().selectFirst(); // Select first category by default
+
         // Load events from text file
         loadEventsFromFile();
         
@@ -151,6 +168,7 @@ public class PlannerController implements Initializable {
         editEventBtn.setVisible(false);
         deleteEventBtn.setVisible(false);
         saveEventBtn.setText("Add Event");
+        eventCategoryComboBox.getSelectionModel().selectFirst(); // Reset category selection
     }
     
     @FXML
@@ -162,6 +180,7 @@ public class PlannerController implements Initializable {
             newOrUpdatedEvent.setTime(parseTime(eventTimeField.getText().trim()));
             newOrUpdatedEvent.setLocation(eventLocationField.getText().trim());
             newOrUpdatedEvent.setDescription(eventDescriptionArea.getText().trim());
+            newOrUpdatedEvent.setCategory(eventCategoryComboBox.getValue()); // Save selected category
             
             if (isEditingEvent && selectedEvent != null) {
                 // Update existing event by finding it by ID and replacing its content
@@ -371,8 +390,12 @@ public class PlannerController implements Initializable {
         for (TripEvent event : dayEvents) {
             Label eventLabel = new Label(event.getName());
             eventLabel.setFont(Font.font("Century Gothic", 8));
-            eventLabel.setTextFill(Color.web("#4CAF50"));
-            eventLabel.setStyle("-fx-background-color: #E8F5E8; -fx-padding: 1; -fx-background-radius: 3;");
+            
+            // Apply color based on category
+            String categoryColor = CATEGORY_COLORS.getOrDefault(event.getCategory(), "#4CAF50"); // Default to green
+            eventLabel.setTextFill(Color.web(categoryColor));
+            eventLabel.setStyle("-fx-background-color: " + categoryColor + "33; -fx-padding: 1; -fx-background-radius: 3;"); // Light tint of category color
+            
             eventLabel.setMaxWidth(110);
             dayBox.getChildren().add(eventLabel);
         }
@@ -432,7 +455,7 @@ public class PlannerController implements Initializable {
         for (TripEvent event : relevantEvents) {
             String eventString = event.getDate().format(DateTimeFormatter.ofPattern("MMM d")) + 
                                (event.getTime() != null ? " " + event.getTime().format(DateTimeFormatter.ofPattern("HH:mm")) : "") + 
-                               " - " + event.getName();
+                               " - " + event.getName() + " [" + event.getCategory() + "]"; // Include category in list view
             eventListView.getItems().add(eventString);
         }
     }
@@ -478,7 +501,7 @@ public class PlannerController implements Initializable {
         for (TripEvent event : events) {
             String compareString = event.getDate().format(DateTimeFormatter.ofPattern("MMM d")) + 
                                  (event.getTime() != null ? " " + event.getTime().format(DateTimeFormatter.ofPattern("HH:mm")) : "") + 
-                                 " - " + event.getName();
+                                 " - " + event.getName() + " [" + event.getCategory() + "]";
             if (compareString.equals(eventString)) {
                 selectedEvent = event;
                 populateEventForm(event);
@@ -498,6 +521,7 @@ public class PlannerController implements Initializable {
         eventTimeField.setText(event.getTime() != null ? event.getTime().format(DateTimeFormatter.ofPattern("HH:mm")) : "");
         eventLocationField.setText(event.getLocation());
         eventDescriptionArea.setText(event.getDescription());
+        eventCategoryComboBox.setValue(event.getCategory()); // Set category in ComboBox
     }
     
     private void clearEventForm() {
@@ -506,6 +530,7 @@ public class PlannerController implements Initializable {
         eventTimeField.clear();
         eventLocationField.clear();
         eventDescriptionArea.clear();
+        eventCategoryComboBox.getSelectionModel().selectFirst(); // Reset category selection
     }
     
     private boolean validateEventForm() {
@@ -526,6 +551,11 @@ public class PlannerController implements Initializable {
                 showAlert("Validation Error", "Invalid time format. Please use HH:MM format (e.g., 14:30).");
                 return false;
             }
+        }
+
+        if (eventCategoryComboBox.getValue() == null || eventCategoryComboBox.getValue().isEmpty()) {
+            showAlert("Validation Error", "Event category is required.");
+            return false;
         }
         
         return true;
@@ -576,20 +606,21 @@ public class PlannerController implements Initializable {
         }
     }
     
-    // Simple string format: ID|Name|Date|Time|Location|Description
+    // Simple string format: ID|Name|Date|Time|Location|Description|Category
     private String eventToString(TripEvent event) {
         return event.getId() + "|" + 
                event.getName() + "|" + 
                event.getDate().toString() + "|" + 
                (event.getTime() != null ? event.getTime().toString() : "") + "|" + 
                (event.getLocation() != null ? event.getLocation() : "") + "|" + 
-               (event.getDescription() != null ? event.getDescription() : "");
+               (event.getDescription() != null ? event.getDescription() : "") + "|" + 
+               (event.getCategory() != null ? event.getCategory() : "Other"); // Default to "Other"
     }
     
     private TripEvent parseEventFromString(String line) {
         try {
             String[] parts = line.split("\\|", -1); // -1 to keep empty strings
-            if (parts.length >= 6) {
+            if (parts.length >= 7) { // Now expecting 7 parts for category
                 TripEvent event = new TripEvent();
                 event.setId(parts[0]);
                 event.setName(parts[1]);
@@ -597,6 +628,17 @@ public class PlannerController implements Initializable {
                 event.setTime(parts[3].isEmpty() ? null : LocalTime.parse(parts[3]));
                 event.setLocation(parts[4].isEmpty() ? null : parts[4]);
                 event.setDescription(parts[5].isEmpty() ? null : parts[5]);
+                event.setCategory(parts[6].isEmpty() ? "Other" : parts[6]); // Default to "Other"
+                return event;
+            } else if (parts.length == 6) { // Handle old format for backward compatibility
+                TripEvent event = new TripEvent();
+                event.setId(parts[0]);
+                event.setName(parts[1]);
+                event.setDate(LocalDate.parse(parts[2]));
+                event.setTime(parts[3].isEmpty() ? null : LocalTime.parse(parts[3]));
+                event.setLocation(parts[4].isEmpty() ? null : parts[4]);
+                event.setDescription(parts[5].isEmpty() ? null : parts[5]);
+                event.setCategory("Other"); // Assign default category for old events
                 return event;
             }
         } catch (Exception e) {
