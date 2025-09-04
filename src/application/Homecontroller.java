@@ -1,6 +1,4 @@
 package application;
-
-import javafx.application.Platform;
 import javafx.event.ActionEvent; //handles button clicks or other actions
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -8,29 +6,39 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.application.HostServices;
 
 public class Homecontroller {
+	private HostServices hostServices;
+
+    public void setHostServices(HostServices hostServices) {
+        this.hostServices = hostServices;
+    }
     @FXML
     private Button startPlanningButton;
-    private void switchScene(Stage stage, String fxmlPath, String title) {
+
+    @FXML
+    void handleStartPlanning(ActionEvent event) {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource(fxmlPath));
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/application/MainMenu.fxml"));
+            Parent root = loader.load();
+
+            MainMenuController controller = loader.getController();
+            controller.setHostServices(hostServices);  // pass HostServices to MainMenu
+
             Scene scene = new Scene(root);
+            scene.setCursor(Cursor.HAND);
             stage.setScene(scene);
-            stage.setMaximized(true);             // keep maximized
-            stage.setFullScreenExitHint("");      // optional
-            //stage.setFullScreen(true);          // optional full screen
-            stage.setTitle(title);
+            stage.setTitle("Factrip - Main Menu");
+            stage.setMaximized(true);
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    @FXML
-    void handleStartPlanning(ActionEvent event) {
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        switchScene(stage, "/application/mainmenu.fxml", "Factrip - Main Menu");
-    }
 }
