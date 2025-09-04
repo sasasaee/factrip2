@@ -1,4 +1,4 @@
-Factrip
+## Factrip
 
 An application build with JavaFX + SceneBuilder for planning trips, exploring fun facts about some underrated countries and keeping memories.
 
@@ -26,9 +26,9 @@ An application build with JavaFX + SceneBuilder for planning trips, exploring fu
 ## Contributors
 We built this project as a team for our Visual Programming Lab:
 
-- [Nazat Jahan] (https://github.com/Rytguy)  
-- [Saeera Tanjim] (https://github.com/sasasaee)  
-- [Salsabil Said] (https://github.com/salsabil161)
+- Nazat Jahan (https://github.com/Rytguy)  
+- Saeera Tanjim (https://github.com/sasasaee)  
+- Salsabil Said (https://github.com/salsabil161)
 
 ---
 
@@ -37,6 +37,5 @@ We built this project as a team for our Visual Programming Lab:
    ```bash
    git clone https://github.com/sasasaee/factrip2.git
 
-   Open in Eclipse/IntelliJ with JavaFX setup
-   Run Main.java
----
+Open in Eclipse/IntelliJ with JavaFX setup
+Run Main.java
