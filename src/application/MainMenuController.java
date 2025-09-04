@@ -46,7 +46,7 @@ public class MainMenuController {
     @FXML
     void handlePlanTrip(ActionEvent event) {
     	Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        switchScene(stage, "/application/planner.fxml", "Factrip - Trip Planner");
+        //switchScene(stage, "/application/planner.fxml", "Factrip - Trip Planner");
     }
 
     @FXML private Button memoEntry;
