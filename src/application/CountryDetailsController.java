@@ -42,10 +42,10 @@ public class CountryDetailsController {
             String remainingText = fact.substring(endOfFirstSentence);
 
             Text italicText = new Text(firstSentence);
-            italicText.setStyle("-fx-font-family: Arial; -fx-font-style: italic; -fx-font-size: 20px;");
+            italicText.setStyle("-fx-font-family: 'Arial'; -fx-font-style: italic; -fx-font-size: 20px; -fx-fill: #660000;");
 
             Text normalText = new Text(remainingText);
-            normalText.setStyle("-fx-font-size: 20px;");
+            normalText.setStyle("-fx-font-family: 'Cambria Math'; -fx-font-size: 20px; -fx-fill: #660000;");
 
             TextFlow textFlow = new TextFlow(italicText, normalText);
             textFlow.setPrefWidth(400); //adjust width for wrapping
@@ -77,13 +77,13 @@ public class CountryDetailsController {
         if (country.getFacts().size() > 1) {		//if more than 1 fact
             Label secondFact = new Label(country.getFacts().get(1));
             secondFact.setWrapText(true);
-            secondFact.setStyle("-fx-font-size: 20px; -fx-padding: 10px;");
+            secondFact.setStyle("-fx-font-family: 'Cambria Math'; -fx-font-size: 20px; -fx-padding: 10px; -fx-text-fill: #660000;");
             rightContainer.getChildren().add(secondFact);
         }
 
         if (country.getLearnMoreLink() != null && !country.getLearnMoreLink().isEmpty()) {
             Label linkLabel = new Label("\n\n\n\nWanna Know more");
-            linkLabel.setStyle("-fx-text-fill: blue; -fx-underline: true; -fx-font-size: 24px;");
+            linkLabel.setStyle("-fx-font-family: 'Cambria Math'; -fx-text-fill: #660000; -fx-underline: true; -fx-font-size: 24px;");
             linkLabel.setOnMouseClicked(e -> {
                 if (hostServices != null) {
                     hostServices.showDocument(country.getLearnMoreLink());

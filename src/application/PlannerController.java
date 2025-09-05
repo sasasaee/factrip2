@@ -268,10 +268,10 @@ public class PlannerController implements Initializable {
         for (int i = 0; i < 7; i++) {
             Label dayLabel = new Label(dayHeaders[i]);
             dayLabel.setFont(Font.font("Century Gothic", FontWeight.BOLD, 14));
-            dayLabel.setTextFill(Color.web("#547792"));
+            dayLabel.setTextFill(Color.web("#5b0101"));
             dayLabel.setAlignment(Pos.CENTER);
             dayLabel.setPrefSize(120, 30);
-            dayLabel.setStyle("-fx-background-color: #FFEAEA; -fx-border-color: #748DAE;");
+            dayLabel.setStyle("-fx-background-color: #CC6666; -fx-border-color: #5b0101;");
             calendarGrid.add(dayLabel, i, 0);
         }
         
@@ -313,10 +313,10 @@ public class PlannerController implements Initializable {
             // Header
             Label dayLabel = new Label(dayHeaders[i] + " " + date.getDayOfMonth());
             dayLabel.setFont(Font.font("Century Gothic", FontWeight.BOLD, 14));
-            dayLabel.setTextFill(Color.web("#547792"));
+            dayLabel.setTextFill(Color.web("#5b0101"));
             dayLabel.setAlignment(Pos.CENTER);
             dayLabel.setPrefSize(140, 30);
-            dayLabel.setStyle("-fx-background-color: #FFEAEA; -fx-border-color: #748DAE;");
+            dayLabel.setStyle("-fx-background-color: #CC6666; -fx-border-color: #5b0101;");
             calendarGrid.add(dayLabel, i, 0);
             
             // Day content
@@ -334,11 +334,11 @@ public class PlannerController implements Initializable {
         // Single day view
         VBox dayBox = createDayBox(currentDate);
         dayBox.setPrefSize(600, 400);
-        dayBox.setStyle("-fx-background-color: white; -fx-border-color: #748DAE; -fx-border-width: 2; -fx-padding: 10;");
+        dayBox.setStyle("-fx-background-color: white; -fx-border-color: #5b0101; -fx-border-width: 2; -fx-padding: 10;");
         
         Label dateLabel = new Label(currentDate.format(DateTimeFormatter.ofPattern("EEEE, MMMM d, yyyy")));
         dateLabel.setFont(Font.font("Century Gothic", FontWeight.BOLD, 18));
-        dateLabel.setTextFill(Color.web("#547792"));
+        dateLabel.setTextFill(Color.web("#5b0101"));
         dayBox.getChildren().add(0, dateLabel);
         
         calendarGrid.add(dayBox, 0, 0);
@@ -353,27 +353,28 @@ public class PlannerController implements Initializable {
         // Highlight today and selected date
         String backgroundColor = "#FFFFFF";
         if (date.equals(LocalDate.now())) {
-            backgroundColor = "#E3F2FD"; // Light blue for today
+            backgroundColor = "#E8F5E8"; // Light blue for today
         } else if (date.equals(selectedDate)) {
             backgroundColor = "#FFF3E0"; // Light orange for selected
         }
         
-        dayBox.setStyle("-fx-background-color: " + backgroundColor + "; -fx-border-color: #748DAE; -fx-cursor: hand;");
+        dayBox.setStyle("-fx-background-color: " + backgroundColor + "; -fx-border-color: #5b0101; -fx-cursor: hand;");
         
         // Day number
         Label dayLabel = new Label(String.valueOf(date.getDayOfMonth()));
         dayLabel.setFont(Font.font("Century Gothic", FontWeight.BOLD, 12));
-        dayLabel.setTextFill(Color.web("#547792"));
+        dayLabel.setTextFill(Color.web("#5b0101"));
         dayBox.getChildren().add(dayLabel);
         
         // Add events for this date
         List<TripEvent> dayEvents = getEventsForDate(date);
         for (TripEvent event : dayEvents) {
             Label eventLabel = new Label(event.getName());
-            eventLabel.setFont(Font.font("Century Gothic", 8));
-            eventLabel.setTextFill(Color.web("#4CAF50"));
+            eventLabel.setFont(Font.font("Century Gothic", 11));
+            eventLabel.setTextFill(Color.web("#5b0101"));
             eventLabel.setStyle("-fx-background-color: #E8F5E8; -fx-padding: 1; -fx-background-radius: 3;");
-            eventLabel.setMaxWidth(110);
+            eventLabel.setWrapText(true);
+            eventLabel.setMaxWidth(160);
             dayBox.getChildren().add(eventLabel);
         }
         
@@ -389,9 +390,9 @@ public class PlannerController implements Initializable {
     
     // Helper methods
     private void updateViewButtons() {
-        monthViewBtn.setStyle("-fx-background-color: " + (currentViewMode == ViewMode.MONTH ? "#4CAF50" : "#547792") + "; -fx-text-fill: white;");
-        weekViewBtn.setStyle("-fx-background-color: " + (currentViewMode == ViewMode.WEEK ? "#4CAF50" : "#547792") + "; -fx-text-fill: white;");
-        dayViewBtn.setStyle("-fx-background-color: " + (currentViewMode == ViewMode.DAY ? "#4CAF50" : "#547792") + "; -fx-text-fill: white;");
+        monthViewBtn.setStyle("-fx-background-color: " + (currentViewMode == ViewMode.MONTH ? " #D7D1C2" : "#B5AB99") + "; -fx-text-fill:  #5b0101;");
+        weekViewBtn.setStyle("-fx-background-color: " + (currentViewMode == ViewMode.WEEK ? " #D7D1C2" : "#B5AB99") + "; -fx-text-fill:  #5b0101;");
+        dayViewBtn.setStyle("-fx-background-color: " + (currentViewMode == ViewMode.DAY ? " #D7D1C2" : "#B5AB99") + "; -fx-text-fill:  #5b0101;");
     }
     
     private void updatePeriodLabel() {

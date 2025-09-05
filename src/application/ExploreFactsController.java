@@ -40,7 +40,7 @@ public class ExploreFactsController {
                 "Slovenia",
                 "/application/resources/flags/slovenia.png",       // small flag for card
                 "/application/resources/images/slovenia3.png",     // scenic image for details
-                "https://en.wikipedia.org/wiki/Slovenia"		  //link to the website
+                "https://www.lonelyplanet.com/destinations/slovenia"		  //link to the website
         );
         slovenia.addFact("“Slovenia is a watercolor painting—emerald lakes, mountain crowns, and caves that breathe secrets.”\n\n\nCapital : Ljubljana\nCurrency : Euro\nOfficial Language : Slovene\nBest Time to Visit : May-June and September.");
         slovenia.addFact("📍 Bled, Slovenia\n\n-Ljubljana, the capital, is known for its vibrant café culture and Baroque architecture.\n-Slovenia has over 10,000 caves, including Postojna Cave\n-You can visit Soča River which shines in emerald-green, perfect for rafting and kayaking.");

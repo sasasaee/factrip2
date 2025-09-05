@@ -6,23 +6,19 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/23.0.1" 
-            xmlns:fx="http://javafx.com/fxml/1" 
-            fx:controller="application.CountryDetailsController"
-            prefHeight="793.0" prefWidth="1570.0">
+<AnchorPane prefHeight="793.0" prefWidth="1570.0" style="-fx-background-color: #800000;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.CountryDetailsController">
 
     <!-- Header -->
-    <Label fx:id="countryFactsLabel" layoutX="30.0" layoutY="20.0" 
-           prefHeight="58.0" prefWidth="400.0" text="Did you know?">
+    <Label fx:id="countryFactsLabel" alignment="TOP_CENTER" layoutX="37.0" layoutY="20.0" prefHeight="58.0" prefWidth="400.0" text="Did you know?" textFill="#fffbfb">
         <font>
-            <Font name="Calibri" size="48.0"/>
+            <Font name="Centaur" size="50.0" />
         </font>
     </Label>
 
     <!-- Scrollable content for details -->
-    <ScrollPane layoutX="0" layoutY="100" prefWidth="1570" prefHeight="693" fitToWidth="true">
+    <ScrollPane fitToWidth="true" layoutX="0" layoutY="100" prefHeight="693" prefWidth="1570" style="-fx-background-color: #E8E3D6;">
         <content>
-            <VBox fx:id="detailsBox" spacing="20" style="-fx-padding: 20;">
+            <VBox fx:id="detailsBox" spacing="20" style="-fx-padding: 20; -fx-background-color: #E8E3D6;">
                 <!-- 
                     Each “card” (image + fact) will be added dynamically from the controller.
                     Styling (background, border, padding) can be done in SceneBuilder or CSS class.
