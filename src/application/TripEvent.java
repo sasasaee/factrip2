@@ -10,18 +10,22 @@ public class TripEvent {
     private LocalTime time;
     private String location;
     private String description;
+    private String category;
+    private int reminderOffsetMinutes; // New field for reminder offset in minutes
     
     // Default constructor
     public TripEvent() {}
     
     // Constructor with all fields
-    public TripEvent(String id, String name, LocalDate date, LocalTime time, String location, String description) {
+    public TripEvent(String id, String name, LocalDate date, LocalTime time, String location, String description, String category, int reminderOffsetMinutes) {
         this.id = id;
         this.name = name;
         this.date = date;
         this.time = time;
         this.location = location;
         this.description = description;
+        this.category = category;
+        this.reminderOffsetMinutes = reminderOffsetMinutes;
     }
     
     // Getters and Setters
@@ -72,6 +76,22 @@ public class TripEvent {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public int getReminderOffsetMinutes() {
+        return reminderOffsetMinutes;
+    }
+
+    public void setReminderOffsetMinutes(int reminderOffsetMinutes) {
+        this.reminderOffsetMinutes = reminderOffsetMinutes;
+    }
     
     @Override
     public String toString() {
@@ -82,7 +102,14 @@ public class TripEvent {
                 ", time=" + time +
                 ", location=\'" + location + '\'' +
                 ", description=\'" + description + '\'' +
+<<<<<<< HEAD
                 '}';
+=======
+                ", category=\'" + category + '\'' +
+                ", reminderOffsetMinutes=" + reminderOffsetMinutes +
+                '}'
+                ;
+>>>>>>> b4ff6e6496b1dc383f1c55d120751b8913aecb67
     }
     
     @Override

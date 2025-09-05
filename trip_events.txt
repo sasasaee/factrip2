@@ -1,2 +1,6 @@
+<<<<<<< HEAD
 51a43383-b1b8-44ae-8d13-e32526200190|Final Day of the Semester|2025-09-05|||GO HOME!
 c3a9f3db-e0ce-4caf-8b4b-b026a1c4ceb8|Done with Visuaaall|2025-09-05|08:41|abc|bgkguhtr
+=======
+f6ac580d-03c5-4a8f-ac68-8ccb37d5aa9e|a|2025-09-05|05:20|b|c|Travel|5
+>>>>>>> b4ff6e6496b1dc383f1c55d120751b8913aecb67

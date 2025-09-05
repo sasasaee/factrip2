@@ -14,7 +14,11 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
+<<<<<<< HEAD
 <BorderPane prefHeight="800.0" prefWidth="1540.0" style="-fx-background-color: #F1E7E7;" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.PlannerController">
+=======
+<BorderPane style="-fx-background-color: #F1E7E7;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.PlannerController">
+>>>>>>> b4ff6e6496b1dc383f1c55d120751b8913aecb67
    <top>
       <VBox alignment="CENTER" spacing="10" style="-fx-background-color: #800000; -fx-padding: 15;">
          <children>
@@ -107,15 +111,24 @@
    </center>
    <right>
       <!-- Event Details Panel -->
+<<<<<<< HEAD
       <VBox fx:id="eventDetailsPanel" prefWidth="300.0" spacing="10" style="-fx-background-color: #E8E3D6; -fx-padding: 15; -fx-border-color: #800000; -fx-border-width: 0 0 0 2;">
+=======
+      <VBox fx:id="eventDetailsPanel" prefWidth="300.0" spacing="5" style="-fx-background-color: #FFEAEA; -fx-padding: 15; -fx-border-color: #748DAE; -fx-border-width: 0 0 0 2;">
+>>>>>>> b4ff6e6496b1dc383f1c55d120751b8913aecb67
          <children>
             <Label text="Event Details" textFill="#5b0101">
                <font>
                   <Font name="Century Gothic Bold" size="16.0" />
                </font>
             </Label>
+<<<<<<< HEAD
             <ListView fx:id="eventListView" onMouseClicked="#selectEvent" prefHeight="200.0" style="-fx-background-color: white; -fx-border-color: #800000;" />
             <VBox fx:id="eventFormPanel" spacing="10" visible="false">
+=======
+            <ListView fx:id="eventListView" onMouseClicked="#selectEvent" prefHeight="200.0" style="-fx-background-color: white; -fx-border-color: #748DAE;" />
+            <VBox fx:id="eventFormPanel" spacing="5" visible="false">
+>>>>>>> b4ff6e6496b1dc383f1c55d120751b8913aecb67
                <children>
                   <Label text="Event Name:" textFill="#547792">
                      <font>
@@ -147,6 +160,18 @@
                      </font>
                   </Label>
                   <TextArea fx:id="eventDescriptionArea" prefRowCount="3" style="-fx-border-color: #748DAE;" />
+                  <Label text="Category:" textFill="#547792">
+                     <font>
+                        <Font name="Century Gothic" size="12.0" />
+                     </font>
+                  </Label>
+                  <ComboBox fx:id="eventCategoryComboBox" prefWidth="270.0" promptText="Select Category" style="-fx-border-color: #748DAE;" />
+                  <Label text="Reminder:" textFill="#547792">
+                     <font>
+                        <Font name="Century Gothic" size="12.0" />
+                     </font>
+                  </Label>
+                  <ComboBox fx:id="reminderComboBox" prefWidth="270.0" promptText="Set Reminder" style="-fx-border-color: #748DAE;" />
                   <HBox spacing="10">
                      <children>
                         <Button fx:id="saveEventBtn" mnemonicParsing="false" onAction="#saveEvent" style="-fx-background-color: #4CAF50; -fx-text-fill: white;" text="Save">
