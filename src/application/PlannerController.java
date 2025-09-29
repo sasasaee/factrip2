@@ -704,8 +704,10 @@ public class PlannerController implements Initializable {
         return null;
     }
 
+
+
+
     // Reminder Logic
- // ------------------ Reminder Logic ------------------
     
 
     private Timeline reminderTimeline;
