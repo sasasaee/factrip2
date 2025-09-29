@@ -92,6 +92,7 @@ public class TripEvent {
     public void setReminderOffsetMinutes(int reminderOffsetMinutes) {
         this.reminderOffsetMinutes = reminderOffsetMinutes;
     }
+
     
     @Override
     public String toString() {
@@ -102,6 +103,8 @@ public class TripEvent {
                 ", time=" + time +
                 ", location=\'" + location + '\'' +
                 ", description=\'" + description + '\'' +
+
+
 <<<<<<< HEAD
                 '}';
 =======
@@ -112,6 +115,8 @@ public class TripEvent {
 >>>>>>> b4ff6e6496b1dc383f1c55d120751b8913aecb67
     }
     
+
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
